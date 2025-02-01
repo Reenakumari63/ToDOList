@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <link rel="stylesheet" href="Todolist.css">
+</head>
+<body>
+    <div class="container">
+        <h2>To Do List</h2>
+        <div class="inside">
+            <input type="text" id="input">
+            <button id="addTask" onclick="gen()">Add</button>
+        </div>
+        <ul id="task-List"></ul>
+    </div>
+    
+    <script>
+        const input = document.getElementById('input');
+        const addTask = document.getElementById('addTask');
+        const taskList = document.getElementById('task-List');
+        
+        const gen = () => {
+            const task1 = input.value.trim();
+            if (task1) {
+                const tasks = JSON.parse(localStorage.getItem("tasks") || "[]"); 
+                tasks.push(task1);
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                input.value = '';
+                loadTasks(); // Reload tasks after adding a new one
+            } else {
+                alert('Please enter a task');
+            }
+        };
+        
+        const loadTasks = () => {
+            const tasks = JSON.parse(localStorage.getItem("tasks") || "[]"); 
+            taskList.innerHTML = ''; // Clear the list before reloading
+            tasks.forEach((task, index) => {
+                const li = document.createElement("li");
+                li.textContent = task;
+        
+                const delButton = document.createElement("button");
+                delButton.textContent = "Delete";
+                delButton.onclick = () => {
+                    deleteTask(index); // Call deleteTask function
+                };
+        
+                const upButton = document.createElement("button");
+                upButton.textContent = "Update";
+                upButton.onclick = () => {
+                    console.log("update button");
+                };
+        
+                li.append(delButton);
+                li.append(upButton);
+                taskList.appendChild(li);
+            });
+        };
+        
+        const deleteTask = (index) => 
+        {
+            const tasks = JSON.parse(localStorage.getItem("tasks") || "[]"); 
+            tasks.splice(index, 1);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            loadTasks(); // Reload tasks after deletion
+        }
+
+
+        const editTask = (index) =>
+        {
+            const task = JSON.parse(localStorage.getItem("tasks") || "[]");
+            const upTask = prompt("Enter the updated task",tasks[index]);
+        }
+    
+        window.onload = loadTasks;
+    </script>
+    
+    
+</body>
+</html>
